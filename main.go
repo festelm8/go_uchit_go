@@ -1,7 +1,11 @@
 package main
 
+import "fmt"
+
 func main(){
-    println("sup m8")
+	fmt.Println(cock(14, 17))
+}
 
-
+func cock(a,b int)(int){ //в скобках указываем получаемые данные, во вторых скобках тип возвращаемых данных
+	return a+b
 }
