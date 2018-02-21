@@ -1,9 +1,16 @@
 package main
 
 import "fmt"
+import "strconv"
+
+//import "./Dick" //импорт локальной либы
 
 func main(){
-	fmt.Println()
+	num,err := strconv.Atoi("10")  // конверт типа данных (в примере из строки в число), два возвращаемых значения ретурн и ерр, где ерр несет в себе инфу об ошибке, если такова будет, ексцепшенов в го нет
+	if err != nil{
+		fmt.Println(err.Error())
+	}
+	fmt.Println(num)
 }
 
 //a := []string{"kok","world"} // создание списка со строками
@@ -18,8 +25,10 @@ func main(){
 //	fmt.Println(v)
 //}
 
-//fmt.Println(cock(14, 17))
-//func cock(a,b int)(int){ //в скобках указываем получаемые данные, во вторых скобках тип возвращаемых данных
+//fmt.Println(Dick(14, 17))
+//func Dick(a,b int)(int){ //в скобках указываем получаемые данные, во вторых скобках тип возвращаемых данных
 //	return a+b
 //}
 
+//Dick.A = 15  //юзаем переменную из другой либы
+//fmt.Println(Dick.A)
