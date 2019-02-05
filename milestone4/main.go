@@ -10,7 +10,8 @@ import (
     "net/http"
     "strconv"
     "time"
-
+    _ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
     "github.com/dgrijalva/jwt-go"
 )
 
@@ -29,6 +30,7 @@ type Author struct {
 type User struct {
   ID string `json:"id"`
   Name string `json:"name"`
+  Phone string `json:"phone"`
 }
 
 type UserJWTClaims struct {
@@ -52,7 +54,7 @@ type ErrorResponse struct {
 
 var books []Book
 var mySigningKey = []byte("cockkekkok")
-
+var db *sqlx.DB
 
 func UserCtx(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -62,25 +64,18 @@ func UserCtx(next http.Handler) http.Handler {
                 return mySigningKey, nil
             })
 
-            if err != nil {
-				fmt.Fprintf(w, err.Error())
-				return
-			}
-
-            if claims, ok := token.Claims.(*UserJWTClaims); ok && token.Valid {
-                currentUser := User{ID:"123", Name:"CockUser"}
-                if currentUser.ID == claims.UID{
-                    fmt.Println(claims.UID)
-                    fmt.Println(currentUser)
-                    fmt.Println("mmm")
-                    ctx := context.WithValue(r.Context(), "currentUser", currentUser)
-                    next.ServeHTTP(w, r.WithContext(ctx))
-                    return
+            if err == nil {
+                if claims, ok := token.Claims.(*UserJWTClaims); ok && token.Valid {
+                    currentUser := User{ID: "123", Name: "CockUser"}
+                    if currentUser.ID == claims.UID {
+                        ctx := context.WithValue(r.Context(), "currentUser", currentUser)
+                        next.ServeHTTP(w, r.WithContext(ctx))
+                        return
+                    }
                 }
             }
         }
 
-        fmt.Println("excess")
         ctx := context.WithValue(r.Context(), "currentUser", nil)
         next.ServeHTTP(w, r.WithContext(ctx))
     })
@@ -120,12 +115,19 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 
 func getBooks(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
+
     ctx := r.Context()
-    currentUser, _ := ctx.Value("currentUser").(*User)
-    fmt.Println(currentUser)
-    //if ok {
-    //    fmt.Println(currentUser.Name)
-    //}
+    currentUser, ok := ctx.Value("currentUser").(User)
+    fmt.Println("Current user", currentUser)
+    if ok {
+       fmt.Println("Authorized")
+    }
+
+    var cock User
+    err := db.Get(&cock, "SELECT * FROM users WHERE id=2")
+    fmt.Println(err)
+    fmt.Println(cock)
+
     json.NewEncoder(w).Encode(books)
 }
 
@@ -177,16 +179,15 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
 }
 
 
-
 func main() {
     books = append(books, Book{ID: "1", Title: "Война и Мир", Author: &Author{Firstname: "Лев", Lastname: "Толстой"}})
     books = append(books, Book{ID: "2", Title: "Преступление и наказание", Author: &Author{Firstname: "Фёдор", Lastname: "Достоевский"}})
+    db = sqlx.MustConnect("mysql", "root:root@tcp(localhost:3306)/go_uchit_go")
+    db = db.Unsafe()
+
     r := chi.NewRouter()
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
-    r.Use(middleware.Recoverer)
 
     r.Post("/login", authLogin)
 

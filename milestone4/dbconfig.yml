@@ -1,0 +1,11 @@
+development:
+    dialect: mysql
+    datasource: root:root@/go_uchit_go?parseTime=true
+    dir: migrations
+    table: migrations
+
+production:
+    dialect: mysql
+    datasource: root:root@/go_uchit_go?parseTime=true
+    dir: migrations
+    table: migrations
