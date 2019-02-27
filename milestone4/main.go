@@ -124,7 +124,7 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
     }
 
     var cock User
-    err := db.Get(&cock, "SELECT * FROM users WHERE id=2")
+    err := db.Get(&cock, "SELECT * FROM users WHERE id=1")
     fmt.Println(err)
     fmt.Println(cock)
 
