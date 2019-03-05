@@ -1,11 +1,11 @@
 
 debug:           false
 db:
-  username:     "name"
-  userpassword: "password"
+  username:     "root"
+  userpassword: "root"
   host:         "localhost"
   port:         "3306"
-  database:     "db_name"
+  database:     "go_uchit_go"
 host:
   ip:           "localhost"
-  port:         "3000"
+  port:         "5000"

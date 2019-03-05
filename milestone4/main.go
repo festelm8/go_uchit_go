@@ -51,9 +51,9 @@ type ErrorResponse struct {
   Msg string `json:"msg"`
 }
 
+var mySigningKey = []byte("cockkekkok")
 
 var books []Book
-var mySigningKey = []byte("cockkekkok")
 var db *sqlx.DB
 
 func UserCtx(next http.Handler) http.Handler {
