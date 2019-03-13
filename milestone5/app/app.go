@@ -9,14 +9,16 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"go_uchit_go/milestone5/conf"
+	"go_uchit_go/milestone5/app/model"
 )
 
 // App struct
 type App struct {
 	Router *chi.Mux
-	DB     *sqlx.DB
+	DB     model.Datastore
 	Conf   *conf.Config
 }
+
 
 // Initialize initializes the app with predefined configuration
 func (app *App) Initialize(config *conf.Config) {
@@ -33,7 +35,7 @@ func (app *App) Initialize(config *conf.Config) {
 	defer db.Close()
 
 	app.Conf = config
-	app.DB = db
+	app.DB = &model.DB{db}
 	app.Router = chi.NewRouter()
 }
 

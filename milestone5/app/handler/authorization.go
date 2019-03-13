@@ -15,12 +15,25 @@ func AuthLogin(app *app.App) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         var authData model.AuthData
-        _ = json.NewDecoder(r.Body).Decode(&authData)
+        errMsg, err := utils.ReqDataDecode(r, &authData)
+        if err != nil {
+            w.WriteHeader(http.StatusUnprocessableEntity)
+            _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: err})
+            return
+        }
 
-        user, err = model.GetUserByPhone(app.DB, authData)
+        fmt.Println(err)
+        fmt.Println(authData)
+        user, err := app.DB.GetUserByPhone(authData)
+        if err != nil {
+            w.WriteHeader(http.StatusNotFound)
+            _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: "no such user"})
+            return
+        }
+
         if authData.Pass != "kok" {
             w.WriteHeader(http.StatusForbidden)
-            json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: "wrong password"})
+            _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: "wrong password"})
             return
         }
 
@@ -29,6 +42,8 @@ func AuthLogin(app *app.App) http.Handler {
             fmt.Println("Failed to generate token")
             return
         }
-        json.NewEncoder(w).Encode(model.AuthToken{Token: validToken})
+
+        fmt.Println(user)
+        _ = json.NewEncoder(w).Encode(model.AuthToken{Token: validToken})
     })
 }
