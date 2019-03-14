@@ -12,21 +12,19 @@ type OK interface {
 	OK() error
 }
 
-func ReqDataDecode(r *http.Request, reqData OK) error {
+func ParseReqData(r *http.Request, reqData OK) error {
 	if err := json.NewDecoder(r.Body).Decode(reqData); err != nil {
 		return err
 	}
 	return reqData.OK()
 }
 
-type ErrMissingField []string
+type ErrMissingField struct{
+	Fields []string
+}
 
-func (errors ErrMissingField) Error() *string {
-	if len(errors) != 0{
-		errorsStr := "Fields: "+ strings.Join(errors[:], ", ") +" is required"
-		return &errorsStr
-	}
-	return nil
+func (errors ErrMissingField) Error() string {
+	return "Fields: "+ strings.Join(errors.Fields[:], ", ") +" is required"
 }
 
 type ErrorResponse struct {

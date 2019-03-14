@@ -10,15 +10,18 @@ type AuthData struct {
   Pass string `json:"password"`
 }
 
-func (data *AuthData) OK() error {
+func (reqData *AuthData) OK() error {
 	var errors utils.ErrMissingField
-	if len(data.Phone) == 0 {
-		errors = append(errors, "phone")
+	if len(reqData.Phone) == 0 {
+		errors.Fields = append(errors.Fields, "phone")
 	}
-	if len(data.Pass) == 0 {
-		errors = append(errors, "password")
+	if len(reqData.Pass) == 0 {
+		errors.Fields = append(errors.Fields, "password")
 	}
-	return errors
+	if len(errors.Fields) != 0 {
+		return errors
+	}
+	return nil
 }
 
 type AuthToken struct {
@@ -29,16 +32,17 @@ type User struct {
 	ID         int64     `db:"id" json:"id"`
 	Name       string    `db:"name" json:"name"`
 	Phone      string    `db:"phone" json:"phone"`
+	Pass      string    `db:"password"`
 }
 
 func (db *DB) GetUserByPhone(authData AuthData) (*User, error) {
 	var user User
-	pstmt, err := db.PrepareNamed(`SELECT * FROM place WHERE phone = :phone`)
+	pstmt, err := db.PrepareNamed(`SELECT * FROM users WHERE phone = :phone`)
 	if err != nil {
         return nil, err
-    }
+	}
 
-	err = pstmt.Select(&user, authData)
+	err = pstmt.Get(&user, authData)
 	if err != nil {
         return nil, err
     }

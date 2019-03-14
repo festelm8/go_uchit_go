@@ -32,7 +32,6 @@ func (app *App) Initialize(config *conf.Config) {
 
 	db := sqlx.MustConnect("mysql", mysqlBind)
 	db = db.Unsafe()
-	defer db.Close()
 
 	app.Conf = config
 	app.DB = &model.DB{db}

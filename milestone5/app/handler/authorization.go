@@ -15,15 +15,13 @@ func AuthLogin(app *app.App) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         var authData model.AuthData
-        errMsg, err := utils.ReqDataDecode(r, &authData)
+        err := utils.ParseReqData(r, &authData)
         if err != nil {
             w.WriteHeader(http.StatusUnprocessableEntity)
-            _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: err})
+            _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: err.Error()})
             return
         }
 
-        fmt.Println(err)
-        fmt.Println(authData)
         user, err := app.DB.GetUserByPhone(authData)
         if err != nil {
             w.WriteHeader(http.StatusNotFound)
@@ -31,7 +29,7 @@ func AuthLogin(app *app.App) http.Handler {
             return
         }
 
-        if authData.Pass != "kok" {
+        if authData.Pass != user.Pass {
             w.WriteHeader(http.StatusForbidden)
             _ = json.NewEncoder(w).Encode(utils.ErrorResponse{Msg: "wrong password"})
             return
@@ -43,7 +41,6 @@ func AuthLogin(app *app.App) http.Handler {
             return
         }
 
-        fmt.Println(user)
         _ = json.NewEncoder(w).Encode(model.AuthToken{Token: validToken})
     })
 }
