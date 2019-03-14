@@ -35,7 +35,7 @@ func AuthLogin(app *app.App) http.Handler {
             return
         }
 
-        validToken, err := utils.GenerateJWT()
+        validToken, err := utils.GenerateJWT(user.ID)
         if err != nil {
             fmt.Println("Failed to generate token")
             return

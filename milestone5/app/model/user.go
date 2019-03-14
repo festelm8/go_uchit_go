@@ -32,7 +32,7 @@ type User struct {
 	ID         int64     `db:"id" json:"id"`
 	Name       string    `db:"name" json:"name"`
 	Phone      string    `db:"phone" json:"phone"`
-	Pass      string    `db:"password"`
+	Pass       string    `db:"password"`
 }
 
 func (db *DB) GetUserByPhone(authData AuthData) (*User, error) {

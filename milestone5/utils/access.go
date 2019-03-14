@@ -19,21 +19,21 @@ import (
 var mySigningKey = []byte("cockkekkok")
 
 type UserJWTClaims struct {
-    UID string `json:"uid"`
+    UID int64 `json:"uid"`
     jwt.StandardClaims
 }
 
-func GenerateJWT() (string, error) {
+func GenerateJWT(UID int64) (string, error) {
    claims := UserJWTClaims{
-       "123",
+       UID,
        jwt.StandardClaims{
            ExpiresAt: time.Now().Add(time.Minute * 30).Unix(),
        },
    }
    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(mySigningKey)
+   tokenString, err := token.SignedString(mySigningKey)
 
-	return tokenString, err
+   return tokenString, err
 }
 
 
