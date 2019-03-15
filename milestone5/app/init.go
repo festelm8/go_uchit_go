@@ -13,13 +13,11 @@ import (
 	"go_uchit_go/milestone5/model"
 )
 
-// App struct
 type App struct {
 	DB        model.Datastore
 	Conf      *conf.Config
 }
 
-// Initialize initializes the app with predefined configuration
 func (app *App) Initialize(config *conf.Config) {
 	mysqlBind := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",
 		config.DB.UserName,
@@ -36,7 +34,6 @@ func (app *App) Initialize(config *conf.Config) {
 	app.DB = &model.DB{db}
 }
 
-// Run the app on it's router
 func (app *App) Run(router *chi.Mux) {
 	hostBind := fmt.Sprintf("%s:%s",
 		app.Conf.Host.IP,

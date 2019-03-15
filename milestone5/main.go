@@ -13,14 +13,12 @@ import (
 
 
 func main() {
-	// load config
 	config, err := conf.NewConfig("config.yaml").Load()
 	utils.CheckError(err)
 
 	instance := &app.App{}
 	instance.Initialize(config)
 
-	// setRouters sets the all required routers
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Post("/login", instance.AuthLogin)
