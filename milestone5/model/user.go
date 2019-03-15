@@ -2,6 +2,7 @@ package model
 
 import (
 	//"fmt"
+
 	"go_uchit_go/milestone5/utils"
 )
 
@@ -9,10 +10,11 @@ type User struct {
 	ID         int64     `db:"id"        json:"id"`
 	Name       string    `db:"name"      json:"name"`
 	Phone      string    `db:"phone"     json:"phone"`
-	Pass       string    `db:"password"`
+	Pass       string    `db:"password"  json:"-"`
 }
 
 
+//authorization
 type AuthData struct {
   Phone string   `json:"phone"     db:"phone"`
   Pass string    `json:"password"`
@@ -46,7 +48,18 @@ func (db *DB) GetUserByPhone(phone string) (*User, error) {
     return &user, nil
 }
 
+func (db *DB) GetUserByID(ID int64) (*User, error) {
+	var user User
+	err := db.Get(&user, `SELECT * FROM users WHERE ID = ?`, ID)
+	if err != nil {
+        return nil, err
+    }
 
+    return &user, nil
+}
+
+
+//registration
 type RegData struct {
   Name   string   `db:"name"      json:"name"`
   Phone  string   `db:"phone"     json:"phone"`

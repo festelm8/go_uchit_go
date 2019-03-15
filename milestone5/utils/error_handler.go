@@ -4,7 +4,6 @@ import (
 	//"fmt"
 	"strings"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -29,10 +28,4 @@ func (errors ErrMissingField) Error() string {
 
 type ErrorResponse struct {
 	Msg string `json:"msg"`
-}
-
-func CheckError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }

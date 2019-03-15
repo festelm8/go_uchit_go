@@ -1,5 +1,6 @@
 
-debug:           false
+debug:          false
+signkey:        "807webf807wtebr0f78twe7"
 db:
   username:     "root"
   userpassword: "root"

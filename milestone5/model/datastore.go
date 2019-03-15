@@ -10,5 +10,6 @@ type DB struct {
 
 type Datastore interface {
     GetUserByPhone(phone string) (*User, error)
+    GetUserByID(ID int64) (*User, error)
     NewUser(regData RegData) error
 }

@@ -29,9 +29,10 @@ func (cm *ConfigManager) Load() (*Config, error) {
 }
 
 type Config struct {
-	Debug bool `yaml:"debug"`
-	DB    DB   `yaml:"db"`
-	Host  Host `yaml:"host"`
+	Debug   bool    `yaml:"debug"`
+	SignKey string  `yaml:"signkey"`
+	DB      DB      `yaml:"db"`
+	Host    Host    `yaml:"host"`
 }
 
 type DB struct {

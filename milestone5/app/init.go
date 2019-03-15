@@ -18,7 +18,7 @@ type App struct {
 	Conf      *conf.Config
 }
 
-func (app *App) Initialize(config *conf.Config) {
+func (app *App) Init(config *conf.Config) {
 	mysqlBind := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",
 		config.DB.UserName,
 		config.DB.UserPassword,
