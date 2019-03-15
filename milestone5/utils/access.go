@@ -13,13 +13,14 @@ import (
    //_ "github.com/go-sql-driver/mysql"
 	//"github.com/jmoiron/sqlx"
    "github.com/dgrijalva/jwt-go"
+   "golang.org/x/crypto/bcrypt"
 )
 
 
 var mySigningKey = []byte("cockkekkok")
 
 type UserJWTClaims struct {
-    UID int64 `json:"uid"`
+    UID int64           `json:"uid"`
     jwt.StandardClaims
 }
 
@@ -35,6 +36,22 @@ func GenerateJWT(UID int64) (string, error) {
 
    return tokenString, err
 }
+
+
+func HashPassword(pwd string) (string, error) {
+    hash, err := bcrypt.GenerateFromPassword([]byte(pwd), 15)
+    if err != nil {
+        return ``, err
+    }
+
+    return string(hash), nil
+}
+
+func VerifyPassword(hash, pwd string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(pwd))
+	return err == nil
+}
+
 
 
 

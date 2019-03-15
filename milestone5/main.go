@@ -21,7 +21,8 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
-	router.Post("/login", instance.AuthLogin)
+	router.Post("/login", instance.Login)
+	router.Post("/reg", instance.RegUser)
 
 	instance.Run(router)
 }

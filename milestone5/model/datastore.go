@@ -9,5 +9,6 @@ type DB struct {
 }
 
 type Datastore interface {
-    GetUserByPhone(authData AuthData) (*User, error)
+    GetUserByPhone(phone string) (*User, error)
+    NewUser(regData RegData) error
 }
